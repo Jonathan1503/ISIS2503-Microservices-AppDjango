@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.conf import settings
 import requests
 import json
-from places.models import Place
+from models import Place
 
 def check_variable(data):
     r = requests.get(settings.PATH_VAR, headers={"Accept":"application/json"})
@@ -34,12 +34,12 @@ def MeasurementCreate(request):
         data = request.body.decode('utf-8')
         data_json = json.loads(data)
         idPlace =check_place(data_json)
-        if check_variable(data_json)== True and idPlace != -1:
+        if check_variable(data_json)== True and idPlace == -1:
             measurement = Measurement()
             measurement.variable = data_json['variable']
             measurement.value = data_json['value']
             measurement.unit = data_json['unit']
-            measurement.place = getPlace(idPlace)
+            measurement.place = idPlace
             measurement.save()
             return HttpResponse("successfully created measurement")
         else:
@@ -57,7 +57,7 @@ def MeasurementsCreate(request):
                         db_measurement.variable = measurement['variable']
                         db_measurement.value = measurement['value']
                         db_measurement.unit = measurement['unit']
-                        db_measurement.place = getPlace(idPlace)
+                        db_measurement.place = idPlace
                         measurement_list.append(db_measurement)
                     else:
                         return HttpResponse("unsuccessfully created measurement. Variable or place does not exist")
@@ -65,6 +65,5 @@ def MeasurementsCreate(request):
         Measurement.objects.bulk_create(measurement_list)
         return HttpResponse("successfully created measurements")
 
-def getPlace(id):
-    return Place.objects.get(pk=id)
+
     
