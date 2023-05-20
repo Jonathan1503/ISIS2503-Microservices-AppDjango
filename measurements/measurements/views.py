@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.conf import settings
 import requests
 import json
-from models import Place
+
 
 def check_variable(data):
     r = requests.get(settings.PATH_VAR, headers={"Accept":"application/json"})
