@@ -1,5 +1,5 @@
 from django.db import models
-from places.places.models import Place
+from places.models import Place
 
 class Measurement(models.Model):
     variable = models.IntegerField(null=False, default=None)
